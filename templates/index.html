@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Plant Disease Detection</title>
+</head>
+
+<body>
+
+<h2>Upload Leaf Image</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <button type="submit">Predict</button>
+</form>
+
+{% if prediction %}
+    <h3>Prediction: {{ prediction }}</h3>
+
+    <img src="{{ image_path }}" width="300">
+    <img src="{{ heatmap_path }}" width="300">
+{% endif %}
+
+</body>
+</html>
