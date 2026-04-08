@@ -187,8 +187,9 @@ def index():
             img = Image.open(filepath).convert("RGB")
             input_tensor = transform(img).unsqueeze(0).to(device)
 
-            output = model(input_tensor)
-            _, pred = torch.max(output, 1)
+            with torch.no_grad():
+                output = model(input_tensor)
+                _, pred = torch.max(output, 1)
 
             prediction_raw = classes[pred.item()]
             prediction = prediction_raw.replace("___", " - ").replace("_", " ")
@@ -196,6 +197,10 @@ def index():
             info = generate_info(prediction_raw)
 
             cam = gradcam.generate(input_tensor, pred.item())
+            
+            # CLEAR MEMORY TO PREVENT OOM CRASHES ON FUTURE REQUESTS
+            gradcam.activations = None
+            gradcam.gradients = None
 
             img_cv = np.array(img)
             img_cv = cv2.resize(img_cv, (224, 224))
@@ -204,7 +209,7 @@ def index():
             result = cv2.addWeighted(img_cv, 0.6, heatmap, 0.4, 0)
 
             heatmap_path = os.path.join("static", "heatmap.png")
-            cv2.imwrite(heatmap_path, result)
+            cv2.imwrite(heatmap_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
 
             image_path = filepath
 
