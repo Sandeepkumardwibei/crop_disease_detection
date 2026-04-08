@@ -5,4 +5,7 @@ __pycache__/
 *.pyd
 .env
 .DS_Store
-*.pth
+
+# Ignore large archives and user uploads
+static/
+archive.zip
