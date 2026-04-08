@@ -15,7 +15,7 @@ os.makedirs("static", exist_ok=True)
 
 # MODEL
 model = HybridPlantModel(num_classes=38)
-model.load_state_dict(torch.load("robust_model.pth", map_location=device))
+model.load_state_dict(torch.load("robust_model.pth", map_location=device, mmap=True, weights_only=True))
 model.to(device)
 model.eval()
 
